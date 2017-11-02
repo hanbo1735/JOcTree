@@ -292,7 +292,8 @@ function getNodalNumbering(S::SparseArray3D{Tn,Tn2}) where Tn <: Integer where T
     kk[7:8:ns8] = k + bsz
     kk[8:8:ns8] = k + bsz
 
-    N = sparse3(ii,jj,kk, Vector{Tn}(1:length(kk)), [m1+1,m2+1,m3+1])
+    N = sparse3(ii,jj,kk, convert(Vector{Tn},kk), [m1+1,m2+1,m3+1])
+    copy!(N.SV.nzval, one(Tn):Tn(nnz(N)) )
 
     return N
 end  # function getNodalNumbering
