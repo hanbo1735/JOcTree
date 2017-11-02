@@ -16,6 +16,7 @@ function getNodalGradientRec(M)
 
 
 S = M.S; h = M.h
+T = typeof(h)
 N           = getNodalNumbering(M)
 EX,EY,EZ, ENX,ENY,ENZ = getEdgeSizeNumbering(M)
 
@@ -23,14 +24,14 @@ i,j,k,esz = find3(EX)  #; esz = round(Int64,esz)
 
 ii = [ nonzeros(ENX)              ; nonzeros(ENX)                     ]
 jj = [ N.SV[sub2ind(N.sz,i,j,k)]    ; N.SV[sub2ind(N.sz ,i+esz,j,k)] ]
-vv = [ -ones(length(i))             ; ones(length(i))                 ]
+vv = [ -ones(T,length(i))             ; ones(T,length(i))                 ]
 
 G1 = sparse(ii, jj, vv, nnz(EX), nnz(N))
 
 i,j,k,esz = find3(EY) #;  esz = round(Int64,esz)
 ii = [ nonzeros(ENY)              ; nonzeros(ENY)                      ]
 jj = [ N.SV[sub2ind(N.sz,i,j,k)]    ; N.SV[sub2ind(N.sz ,i,j+esz,k)] ]
-vv = [ -ones(length(i))             ; ones(length(i))                  ]
+vv = [ -ones(T,length(i))             ; ones(T,length(i))                  ]
 
 G2 = sparse(ii, jj, vv, nnz(EY), nnz(N))
 
@@ -38,13 +39,13 @@ G2 = sparse(ii, jj, vv, nnz(EY), nnz(N))
 i,j,k,esz = find3(EZ) #;  esz = round(Int64,esz)
 ii = [ nonzeros(ENZ)              ; nonzeros(ENZ)                     ]
 jj = [ N.SV[sub2ind(N.sz,i,j,k)]  ; N.SV[sub2ind(N.sz  ,i,j,k+esz)] ]
-vv = [ -ones(size(i))             ; ones(size(i))                     ]
+vv = [ -ones(T,size(i))             ; ones(T,size(i))                     ]
 
 G3 = sparse(ii, jj, vv, nnz(EZ), nnz(N));
 
 G = [G1 ; G2 ; G3];
 
-ESZi = 1. ./ vcat(nonzeros(EX)*h[1],
+ESZi = one(T) ./ vcat(nonzeros(EX)*h[1],
                   nonzeros(EY)*h[2],
                   nonzeros(EZ)*h[3] )
 

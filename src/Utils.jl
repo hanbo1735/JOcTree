@@ -123,15 +123,13 @@ end
 
 # Internal utilities
 
-function getNodesFromIndices(sv,mm,i0::Vector{Int},j0::Vector{Int},k0::Vector{Int})
-
+function getNodesFromIndices(sv,mm,i0::Vector,j0::Vector,k0::Vector)
 	jj = sub2ind(mm,i0,j0,k0)
-  v  = Array{Int64}(length(jj))
-  for i = 1:length(jj)
-    v[i] = sv[jj[i]]
-  end
+    v  = Array{eltype(sv)}(length(jj))
+    for i = 1:length(jj)
+        v[i] = sv[jj[i]]
+    end
 	return v
-
 end
 
 """
@@ -139,7 +137,7 @@ end
 
 Replace zero entries in `a` by values from `b`.
 """
-function merge!(a::Vector{Int64}, b::Vector{Int64})
+function merge!(a::Vector{T}, b::Vector{T}) where T <: Number
   n = length(a)
   (length(b) == n) || throw(DimensionMismatch("length(a) != length(b)"))
   @inbounds begin

@@ -41,17 +41,18 @@ function getEdgeNumbering(S::SparseArray3D)
 end
 
 
-function getEdgeSizeNumbering(S::SparseArray3D)
+function getEdgeSizeNumbering(S::SparseArray3D{Tn,Tn2}) where Tn <: Integer where Tn2 <: Integer
 
  m1,m2,m3 = S.sz
  i,j,k,bsz = find3(S)
 
  ns = nnz(S)
  ns4 = ns*4
- ii = Array{Int64}(ns4)
- jj = Array{Int64}(ns4)
- kk = Array{Int64}(ns4)
- vv = Array{Int64}(ns4)
+
+ ii = Array{Tn2}(ns4)
+ jj = Array{Tn2}(ns4)
+ kk = Array{Tn2}(ns4)
+ vv = Array{Tn}(ns4)
 
  vv[1:4:ns4] = bsz
  vv[2:4:ns4] = bsz
@@ -179,17 +180,17 @@ function getFaceNumbering(S::SparseArray3D)
 end
 
 
-function getFaceSizeNumbering(S::SparseArray3D)
+function getFaceSizeNumbering(S::SparseArray3D{Tn,Tn2}) where Tn <: Integer where Tn2 <: Integer
 
  m1,m2,m3 = S.sz
  i,j,k,bsz = find3(S)
 
  ns = nnz(S)
  ns2 = ns*2
- ii = Array{Int64}(ns2)
- jj = Array{Int64}(ns2)
- kk = Array{Int64}(ns2)
- vv = Array{Int64}(ns2)
+ ii = Array{Tn2}(ns2)
+ jj = Array{Tn2}(ns2)
+ kk = Array{Tn2}(ns2)
+ vv = Array{Tn}(ns2)
 
  vv[1:2:ns2] = bsz
  vv[2:2:ns2] = bsz
@@ -252,7 +253,7 @@ function getNodalNumbering(M::OcTreeMesh)
    return M.NN
 end
 
-function getNodalNumbering(S::SparseArray3D)
+function getNodalNumbering(S::SparseArray3D{Tn,Tn2}) where Tn <: Integer where Tn2 <: Integer
     # Numbering of the nodes of an OcTree structure
 
     m1,m2,m3 = S.sz
@@ -260,9 +261,9 @@ function getNodalNumbering(S::SparseArray3D)
 
     ns = nnz(S)
     ns8 = ns*8
-    ii = Array{Int64}(ns8)
-    jj = Array{Int64}(ns8)
-    kk = Array{Int64}(ns8)
+    ii = Array{Tn2}(ns8)
+    jj = Array{Tn2}(ns8)
+    kk = Array{Tn2}(ns8)
 
     ii[1:8:ns8] = i
     ii[2:8:ns8] = i + bsz
@@ -291,8 +292,7 @@ function getNodalNumbering(S::SparseArray3D)
     kk[7:8:ns8] = k + bsz
     kk[8:8:ns8] = k + bsz
 
-    N = sparse3(ii,jj,kk, kk, [m1+1,m2+1,m3+1])
-    copy!(N.SV.nzval, 1:nnz(N) )
+    N = sparse3(ii,jj,kk, Vector{Tn}(1:length(kk)), [m1+1,m2+1,m3+1])
 
     return N
 end  # function getNodalNumbering
