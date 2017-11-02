@@ -61,7 +61,8 @@ function getdEdgeMassMatrix{T<:Number}(mesh::OcTreeMeshFV, sigma::Vector, v::Vec
         dM = SparseMatrixCSC(P.A.m, P.A.n, copy(P.A.colptr), copy(P.A.rowval), T.(P.A.nzval))
         DiagTimesM(v, dM)
     else # generally anisotropic
-        V = SparseMatrixCSC(P.n, nz, collect(eltype(P.A.colptr),1:nz+1), P.rowval, v[P.colval])
+        N = eltype(P.A.colptr)
+        V = SparseMatrixCSC(P.n, nz, collect(N,1:nz+1), P.rowval, v[P.colval])
         dM = V * P.A
     end
     return dM
@@ -149,8 +150,8 @@ for isotropic, diagonally anisotropic or generally anisotropic coefficient.
 function setupEdgeMassMatrix(mesh::OcTreeMeshFV, sigma)
 
     na = length(sigma)
-    N  = typeof(mesh.nc)
-    nc = N(mesh.nc)
+    nc = mesh.nc
+    N  = typeof(nc)
 
     @assert in(na, [nc, 3*nc, 6*nc]) "Invalid size of sigma"
 

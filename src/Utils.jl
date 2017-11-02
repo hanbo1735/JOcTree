@@ -148,3 +148,14 @@ function merge!(a::Vector{T}, b::Vector{T}) where T <: Number
     end
   end
 end
+
+import Base.speye
+speye(Tt::Type{T}, Tn::Type{N}, m::Integer) where T where N = speye(Tt, Tn, m, m)
+function speye(::Type{T}, ::Type{N}, m::Integer, n::Integer) where T where N
+    ((m < 0) || (n < 0)) && throw(ArgumentError("invalid array dimensions"))
+    nnz = min(m,n)
+    colptr = Vector{N}(1+n)
+    colptr[1:nnz+1] = 1:nnz+1
+    colptr[nnz+2:end] = nnz+1
+    SparseMatrixCSC(Int(m), Int(n), colptr, Vector{N}(1:nnz), ones(T,nnz))
+end

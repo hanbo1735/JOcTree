@@ -64,9 +64,9 @@ mutable struct OcTreeMeshFV{T<:Real,N<:Integer,N2<:Integer} <: OcTreeMesh
 	L::SparseMatrixCSC{T,N} # edge lengths
 	Ne::SparseMatrixCSC{T,N} # Edge nullspace matrix
 	Qe::SparseMatrixCSC{T,N} # Edge projection matrix
-	activeEdges::Vector{N2}   # lookup table for new edge enumeration
-	activeFaces::Vector{N2}   # lookup table for new face enumeration
-	activeNodes::Vector{N2}   # lookup table for new node enumeration
+	activeEdges::Vector{N}   # lookup table for new edge enumeration
+	activeFaces::Vector{N}   # lookup table for new face enumeration
+	activeNodes::Vector{N}   # lookup table for new node enumeration
 	Nn::SparseMatrixCSC{T,N} # Node nullspace matrix
 	Qn::SparseMatrixCSC{T,N} # Node projection matrix
 	Nf::SparseMatrixCSC{T,N} # Face nullspace matrix
@@ -120,7 +120,7 @@ function getOcTreeMeshFV{T<:Real,N<:Integer,N2<:Integer}(S::SparseArray3D{N,N2},
                         Dict{Int64,MassMatrix{T,N}}(), # no Pn
                         empt,empt,empt,   # no Af,Ae,An
                         empt,empt,empt,empt, # no V,L,Ne,Qe,
-                        N2[],N2[],N2[],  # no active edges, active faces, active nodes
+                        N[],N[],N[],  # no active edges, active faces, active nodes
                         empt,empt,empt,empt, #no Nn,Qn,Nf,Qf
                         FX,FY,FZ,
                         EX,EY,EZ,
