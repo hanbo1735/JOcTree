@@ -8,7 +8,7 @@ function createOcTreeFromBox(
   ya::AbstractFloat, yb::AbstractFloat,
   za::AbstractFloat, zb::AbstractFloat,
   nf::Array{N2,1}, nc::Array{N2,1},
-  bsz::Integer = 1,operatorIntType::Type{N}=Int32) where N <: Integer where N2 <:Integer
+  bsz::Integer = 1,operatorIntType::Type{N}=Int64) where N <: Integer where N2 <:Integer
 # S = createOcTreeFromBox( ...
 #   x0, y0, z0, nx, ny, nz, hx, hy, hz, xa, xb, ya, yb, za, zb, nf, nc)
 #
@@ -234,7 +234,7 @@ createOcTreeFromBox(
   nf::Integer,
   nc::Integer,
   bsz::Integer = 1,
-  operatorIntType::Type{N}=Int32) where N <: Integer =
+  operatorIntType::Type{N}=Int64) where N <: Integer =
 createOcTreeFromBox(
   x0, y0, z0,
   nx, ny, nz,

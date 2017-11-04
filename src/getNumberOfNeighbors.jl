@@ -6,13 +6,14 @@ function  getNumberOfNeighbors(S::SparseArray3D)
 m1,m2,m3  = S.sz
 i,j,k,bsz = find3(S)
 
-ns = length(i)
-left  = zeros(Int64,ns)
-right = zeros(Int64,ns)
-upper = zeros(Int64,ns)
-lower = zeros(Int64,ns)
-front = zeros(Int64,ns)
-back  = zeros(Int64,ns)
+Tn2 = eltype(S.SV.nzind)
+ns  = length(i)
+left  = zeros(Tn2,ns)
+right = zeros(Tn2,ns)
+upper = zeros(Tn2,ns)
+lower = zeros(Tn2,ns)
+front = zeros(Tn2,ns)
+back  = zeros(Tn2,ns)
 
 ## UPPER ================================================
 Iin   = find((i-bsz).>=1)

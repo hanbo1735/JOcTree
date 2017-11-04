@@ -98,3 +98,11 @@ import Base.==
 function ==(S1::SparseArray3D,S2::SparseArray3D)
 	return (S1.SV==S2.SV) && (S1.sz == S2.sz)
 end
+
+import Base.clear!
+function clear!(S::SparseArray3D)
+    N  = eltype(S.SV.nzval)
+    N2 = eltype(S.SV.nzind)
+    sz = [size(S,1),size(S,2),size(S,3)]
+    return SparseArray3D(spzeros(N,N2,prod(sz)),sz)
+end

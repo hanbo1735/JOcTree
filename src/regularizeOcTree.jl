@@ -25,8 +25,7 @@ function regularizeOcTree(S::SparseArray3D)
 
 
 # Regularize. This saves refinement iterations.
-S = regularizeOcTreeFaceNeighbours(S)
-
+S   = regularizeOcTreeFaceNeighbours(S)
 
 # Iterate until all cells meet the quality restrictions. Terminates in the
 # worst case when all cells are fine cells (bsz = 1).

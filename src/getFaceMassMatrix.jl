@@ -145,8 +145,8 @@ for isotropic, diagonally anisotropic or generally anisotropic coefficient.
 function setupFaceMassMatrix(mesh, sigma)
 
     na = length(sigma)
-    N = eltype(nc)
-    nc = mesh.nc
+    N = eltype(mesh.nc)
+    nc = N(mesh.nc)
 
     @assert in(na, [nc, 3*nc, 6*nc]) "Invalid size of sigma"
 

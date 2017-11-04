@@ -16,7 +16,7 @@ function getNodalGradientRec(M)
 
 
 S = M.S; h = M.h
-T = typeof(h)
+T = eltype(h)
 N           = getNodalNumbering(M)
 EX,EY,EZ, ENX,ENY,ENZ = getEdgeSizeNumbering(M)
 

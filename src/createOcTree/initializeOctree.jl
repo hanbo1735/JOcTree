@@ -33,7 +33,7 @@ function initializeOctree( n::Vector{Int64}, bsz::Int64=0)
     end
 
     i,j,k = ndgrid(1:nb:n[1], 1:nb:n[2], 1:nb:n[3])
-    b = fill(nb, length(i))
+    b = fill(Int32(nb), length(i))
 
     S = sparse3(vec(i),vec(j),vec(k), b, n)
     return S

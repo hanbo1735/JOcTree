@@ -136,7 +136,7 @@ function setupNodalMassMatrix(mesh, sigma)
         rowval = collect(N,1:n)
         colval = Array{N}(0) # unused
 
-        mesh.Pn[na] = MassMatrix(n, A, rowval, colptr, colval)
+        mesh.Pn[na] = MassMatrix(Int(n), A, rowval, colptr, colval)
 
     end
 
