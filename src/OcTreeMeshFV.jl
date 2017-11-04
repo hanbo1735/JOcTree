@@ -20,7 +20,7 @@ Fields
  - `colptr::Array{Integer,1}`: CSC format column pointers in `M`
  - `colval::Array{Integer,1}`: column indices of nonzero entries in `M`
 """
-struct MassMatrix{T<:Real,N<:Integer}
+struct MassMatrix{T<:Number,N<:Integer}
     n::Int
     A::SparseMatrixCSC{T,N}
     rowval::Array{N,1}
@@ -34,7 +34,7 @@ end
 
 Default constructor for `MassMatrix`
 """
-function MassMatrix(T::Type{t},N::Type{n}) where t <: Real where n <: Integer
+function MassMatrix(T::Type{t},N::Type{n}) where t <: Number where n <: Integer
     F = Array{T}(0)
     I = Array{T}(0)
     S = SparseMatrixCSC(0, 0, N[1], I, F)
@@ -42,7 +42,7 @@ function MassMatrix(T::Type{t},N::Type{n}) where t <: Real where n <: Integer
 end
 
 
-mutable struct OcTreeMeshFV{T<:Real,N<:Integer,N2<:Integer} <: OcTreeMesh
+mutable struct OcTreeMeshFV{T<:Number,N<:Integer,N2<:Integer} <: OcTreeMesh
 	S::SparseArray3D{N,N2}    # i,j,k, bsz
 	h::Vector{T}  # (3) underlying cell size
 	x0::Vector{T} # coordinates of corner of mesh
@@ -89,7 +89,7 @@ mutable struct OcTreeMeshFV{T<:Real,N<:Integer,N2<:Integer} <: OcTreeMesh
 end # type OcTreeMeshFV
 
 
-function getOcTreeMeshFV{T<:Real,N<:Integer,N2<:Integer}(S::SparseArray3D{N,N2},
+function getOcTreeMeshFV{T<:Number,N<:Integer,N2<:Integer}(S::SparseArray3D{N,N2},
                          h::Vector{T};x0::Vector{T}=zeros(T,3))
 
     # get number of cells
@@ -133,7 +133,7 @@ end  # function getOcTreeMeshFV
 
 import Base.clear!
 function clear!(M::OcTreeMeshFV; exclude::Vector{Symbol} = Vector{Symbol}())
-  
+
   # Don't clear the essential mesh information:
   # if !(:S           in exclude) M.S           = sparse3([0,0,0]);        end
   # if !(:h           in exclude) M.h           = zeros(3);                end
@@ -143,7 +143,7 @@ function clear!(M::OcTreeMeshFV; exclude::Vector{Symbol} = Vector{Symbol}())
   # if !(:nf          in exclude) M.nf          = [0,0,0];                 end
   # if !(:ne          in exclude) M.ne          = [0,0,0];                 end
   # if !(:nn          in exclude) M.nn          = 0;                       end
-  
+
   # Clear all derived variables
   if !(:Div         in exclude) M.Div         = spzeros(0,0);             end
   if !(:Grad        in exclude) M.Grad        = spzeros(0,0);             end
