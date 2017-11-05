@@ -41,10 +41,11 @@ Pz2 = ez.SV[sub2ind(nez,i+bsz,j,k),1]
 Pz3 = ez.SV[sub2ind(nez,i,j+bsz,k),1]
 Pz4 = ez.SV[sub2ind(nez,i+bsz,j+bsz,k),1]
 
-
-sp1(Q) = sparse(1:Base.nnz(Q),Base.nonzeros(Q),ones(Base.nnz(Q)),nc,nx)
-sp2(Q) = sparse(1:Base.nnz(Q),Base.nonzeros(Q),ones(Base.nnz(Q)),nc,ny)
-sp3(Q) = sparse(1:Base.nnz(Q),Base.nonzeros(Q),ones(Base.nnz(Q)),nc,nz)
+Tn = eltype(S.SV.nzval)
+Tn1 = one(Tn)
+sp1(Q) = sparse(Tn1:Tn(Base.nnz(Q)),Tn(Base.nonzeros(Q)),ones(Base.nnz(Q)),nc,nx)
+sp2(Q) = sparse(Tn1:Tn(Base.nnz(Q)),Tn(Base.nonzeros(Q)),ones(Base.nnz(Q)),nc,ny)
+sp3(Q) = sparse(Tn1:Tn(Base.nnz(Q)),Tn(Base.nonzeros(Q)),ones(Base.nnz(Q)),nc,nz)
 
 Ax = 1/4 * (sp1(Px1) + sp1(Px2) + sp1(Px3) + sp1(Px4))
 Ay = 1/4 * (sp2(Py1) + sp2(Py2) + sp2(Py3) + sp2(Py4))
