@@ -14,7 +14,7 @@ export importUBCOcTreeMesh, importUBCOcTreeModel
         mesh::OcTreeMesh - The mesh
 
 """
-function importUBCOcTreeMesh(meshfile::AbstractString;Tn::Type{N}=Int32,Tn2::Type{N2}=Int64) where N <: Integer where N2 <: Integer
+function importUBCOcTreeMesh(meshfile::AbstractString;Tn::Type{N}=Int64,Tn2::Type{N2}=Int64) where N <: Integer where N2 <: Integer
 
     # open file (throws error if file doesn't exist)
     f    = open(meshfile,"r")
