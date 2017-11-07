@@ -6,6 +6,7 @@ import Base.nnz
 import Base.getindex
 import Base.setindex!
 import Base.ndims
+import Base.convert
 
 struct SparseArray3D{N<:Integer,N2<:Integer}
         SV::SparseVector{N,N2}
@@ -16,6 +17,14 @@ Base.size(S::SparseArray3D) = (S.sz[1], S.sz[2], S.sz[3])
 Base.size(S::SparseArray3D,dim::Integer) = S.sz[dim]
 Base.find(S::SparseArray3D) = find(S.SV)
 Base.ndims(S::SparseArray3D) = 3
+
+function convert(::Type{N}, ::Type{N2}, S::SparseArray3D) where N <: Integer where N2 <: Integer
+    return SparseArray3D(convert(SparseVector{N,N2}, S.SV), convert(Vector{N2}, S.sz))
+end
+
+function convert(::Type{N}, S::SparseArray3D) where N <: Integer
+    return convert(N, eltype(S.SV.nzind), S)
+end
 
 function sparse3(sz::Vector)
         S = spzeros(eltype(sz),eltype(sz),prod(sz))
