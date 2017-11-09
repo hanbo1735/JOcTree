@@ -109,10 +109,10 @@ function getOcTreeMeshFV{T<:Number,N<:Integer,N2<:Integer}(S::SparseArray3D{N,N2
 	nn = N(nnz(NN))
 
 	empt  = spzeros(T,N,0,0)
-    sz    = [size(S,1),size(S,2),size(S,3)]
+    sz    = (size(S,1),size(S,2),size(S,3))
 	empt3 = SparseArray3D(spzeros(N,N2,prod(sz)),sz)
 
-		return OcTreeMeshFV(S, h, x0, S.sz,
+		return OcTreeMeshFV(S, h, x0, collect(S.sz),
                         nc,nf,ne,nn,
                         empt,empt,empt,       # no Div, Grad, Curl
                         Dict{Int64,MassMatrix{T,N}}(), # no Pf
@@ -165,20 +165,20 @@ function clear!(M::OcTreeMeshFV; exclude::Vector{Symbol} = Vector{Symbol}())
   if !(:Qn          in exclude) M.Qn          = spzeros(0,0);             end
   if !(:Nf          in exclude) M.Nf          = spzeros(0,0);             end
   if !(:Qf          in exclude) M.Qf          = spzeros(0,0);             end
-  if !(:FX          in exclude) M.FX          = sparse3([0,0,0]);         end
-  if !(:FY          in exclude) M.FY          = sparse3([0,0,0]);         end
-  if !(:FZ          in exclude) M.FZ          = sparse3([0,0,0]);         end
-  if !(:EX          in exclude) M.EX          = sparse3([0,0,0]);         end
-  if !(:EY          in exclude) M.EY          = sparse3([0,0,0]);         end
-  if !(:EZ          in exclude) M.EZ          = sparse3([0,0,0]);         end
-  if !(:NC          in exclude) M.NC          = sparse3([0,0,0]);         end
-  if !(:NFX         in exclude) M.NFX         = sparse3([0,0,0]);         end
-  if !(:NFY         in exclude) M.NFY         = sparse3([0,0,0]);         end
-  if !(:NFZ         in exclude) M.NFZ         = sparse3([0,0,0]);         end
-  if !(:NEX         in exclude) M.NEX         = sparse3([0,0,0]);         end
-  if !(:NEY         in exclude) M.NEY         = sparse3([0,0,0]);         end
-  if !(:NEZ         in exclude) M.NEZ         = sparse3([0,0,0]);         end
-  if !(:NN          in exclude) M.NN          = sparse3([0,0,0]);         end
+  if !(:FX          in exclude) M.FX          = sparse3((0,0,0));         end
+  if !(:FY          in exclude) M.FY          = sparse3((0,0,0));         end
+  if !(:FZ          in exclude) M.FZ          = sparse3((0,0,0));         end
+  if !(:EX          in exclude) M.EX          = sparse3((0,0,0));         end
+  if !(:EY          in exclude) M.EY          = sparse3((0,0,0));         end
+  if !(:EZ          in exclude) M.EZ          = sparse3((0,0,0));         end
+  if !(:NC          in exclude) M.NC          = sparse3((0,0,0));         end
+  if !(:NFX         in exclude) M.NFX         = sparse3((0,0,0));         end
+  if !(:NFY         in exclude) M.NFY         = sparse3((0,0,0));         end
+  if !(:NFZ         in exclude) M.NFZ         = sparse3((0,0,0));         end
+  if !(:NEX         in exclude) M.NEX         = sparse3((0,0,0));         end
+  if !(:NEY         in exclude) M.NEY         = sparse3((0,0,0));         end
+  if !(:NEZ         in exclude) M.NEZ         = sparse3((0,0,0));         end
+  if !(:NN          in exclude) M.NN          = sparse3((0,0,0));         end
 
   return
 

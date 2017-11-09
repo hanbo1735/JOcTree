@@ -16,21 +16,22 @@ function getNodalGradientRec(M)
 
 
 S = M.S; h = M.h
-T = eltype(h)
+T   = eltype(h)
+Tn2 = eltype(S.SV.nzind)
 N           = getNodalNumbering(M)
 EX,EY,EZ, ENX,ENY,ENZ = getEdgeSizeNumbering(M)
 
 i,j,k,esz = find3(EX)  #; esz = round(Int64,esz)
 
 ii = [ nonzeros(ENX)              ; nonzeros(ENX)                     ]
-jj = [ N.SV[sub2ind(N.sz,i,j,k)]    ; N.SV[sub2ind(N.sz ,i+esz,j,k)] ]
+jj = [ N.SV[sub2ind(N.sz,i,j,k)]    ; N.SV[sub2ind(N.sz ,convert(Vector{Tn2},i+esz),j,k)] ]
 vv = [ -ones(T,length(i))             ; ones(T,length(i))                 ]
 
 G1 = sparse(ii, jj, vv, nnz(EX), nnz(N))
 
 i,j,k,esz = find3(EY) #;  esz = round(Int64,esz)
 ii = [ nonzeros(ENY)              ; nonzeros(ENY)                      ]
-jj = [ N.SV[sub2ind(N.sz,i,j,k)]    ; N.SV[sub2ind(N.sz ,i,j+esz,k)] ]
+jj = [ N.SV[sub2ind(N.sz,i,j,k)]    ; N.SV[sub2ind(N.sz ,i,convert(Vector{Tn2},j+esz),k)] ]
 vv = [ -ones(T,length(i))             ; ones(T,length(i))                  ]
 
 G2 = sparse(ii, jj, vv, nnz(EY), nnz(N))
@@ -38,7 +39,7 @@ G2 = sparse(ii, jj, vv, nnz(EY), nnz(N))
 
 i,j,k,esz = find3(EZ) #;  esz = round(Int64,esz)
 ii = [ nonzeros(ENZ)              ; nonzeros(ENZ)                     ]
-jj = [ N.SV[sub2ind(N.sz,i,j,k)]  ; N.SV[sub2ind(N.sz  ,i,j,k+esz)] ]
+jj = [ N.SV[sub2ind(N.sz,i,j,k)]  ; N.SV[sub2ind(N.sz  ,i,j,convert(Vector{Tn2},k+esz))] ]
 vv = [ -ones(T,size(i))             ; ones(T,size(i))                     ]
 
 G3 = sparse(ii, jj, vv, nnz(EZ), nnz(N));

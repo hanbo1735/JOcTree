@@ -18,13 +18,16 @@ end
 function getNodalConstraints(::Type{Tf},S::SparseArray3D) where Tf
     i,j,k,bsz = find3(S)
 
+
     upper,lower,left,right,front,back = getNumberOfNeighbors(S)
     nn = [upper; lower; left; right; front; back]
     if ~all( (nn .== 0) .| (nn .== 1) .| (nn .== 4) )
     error("Implemented only for regularized OcTree meshes")
     end
     NN = getNodalNumbering(S)
-    Tn = eltype(NN.SV.nzval)
+    Tn  = eltype(NN.SV.nzval)
+    Tn2 = eltype(NN.SV.nzind)
+    bsz = convert(Vector{Tn2},bsz)
     n1 = Tn[]; n2 = Tn[]; n3 = Tn[];
     n4 = Tn[]; n5 = Tn[]; n6 = Tn[];
     n7 = Tn[]; n8 = Tn[]; n9 = Tn[];
@@ -49,7 +52,7 @@ function getNodalConstraints(::Type{Tf},S::SparseArray3D) where Tf
     # n1--------n2--------n3
 
     I = find(upper.==4) #find "bigger" cells
-    bsz2 = div.(bsz[I],2)
+    bsz2 = div.(bsz[I],Tn2(2))
 
     if !isempty(I)
     append!(n1, NN.SV[sub2ind(size(NN), i[I], j[I]        , k[I]        )])
@@ -64,7 +67,7 @@ function getNodalConstraints(::Type{Tf},S::SparseArray3D) where Tf
     end
 
     I = find(lower.==4) # find  "bigger" cells
-    bsz2 = div.(bsz[I],2)
+    bsz2 = div.(bsz[I],Tn2(2))
 
     if !isempty(I)
     append!(n1, NN.SV[sub2ind(size(NN), i[I]+bsz[I], j[I]        , k[I]       )])
@@ -81,7 +84,7 @@ function getNodalConstraints(::Type{Tf},S::SparseArray3D) where Tf
     ##################################
 
     I = find(left .== 4) # find  "bigger" cells
-    bsz2 = div.(bsz[I],2)
+    bsz2 = div.(bsz[I],Tn2(2))
 
     if !isempty(I)
     append!(n1, NN.SV[sub2ind(size(NN), i[I]        , j[I], k[I]        )])
@@ -96,7 +99,7 @@ function getNodalConstraints(::Type{Tf},S::SparseArray3D) where Tf
     end
 
     I = find(right .== 4) # find  "bigger" cells
-    bsz2 = div.(bsz[I],2)
+    bsz2 = div.(bsz[I],Tn2(2))
 
     if !isempty(I)
     append!(n1, NN.SV[sub2ind(size(NN), i[I]         , j[I]+bsz[I], k[I]        )])
@@ -113,7 +116,7 @@ function getNodalConstraints(::Type{Tf},S::SparseArray3D) where Tf
     ##################################
 
     I = find(front .== 4) # find  "bigger" cells
-    bsz2 = div.(bsz[I],2)
+    bsz2 = div.(bsz[I],Tn2(2))
 
     if !isempty(I)
     append!(n1, NN.SV[sub2ind(size(NN), i[I]         , j[I]        , k[I] )])
@@ -128,7 +131,7 @@ function getNodalConstraints(::Type{Tf},S::SparseArray3D) where Tf
     end
 
     I = find(back .== 4) # find  "bigger" cells
-    bsz2 = div.(bsz[I],2)
+    bsz2 = div.(bsz[I],Tn2(2))
 
     if !isempty(I)
     append!(n1, NN.SV[sub2ind(size(NN), i[I]        , j[I]        , k[I]+bsz[I] )])

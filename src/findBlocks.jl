@@ -28,7 +28,7 @@ function findBlocks(S::SparseArray3D,i::Vector,j::Vector,k::Vector)
 		if isempty(Iz)
 			break
 		end
-	    t               = S.SV[sub2ind((S.sz[1],S.sz[2],S.sz[3]),bi[Iz],bj[Iz],bk[Iz])]
+	    t               = S.SV[sub2ind(S.sz,bi[Iz],bj[Iz],bk[Iz])]
 	    indnz           = find(t .!= 0)
 	    indz            = find(t .== 0)
 	    bsz[Iz[indnz]]  = t[indnz]
@@ -54,12 +54,11 @@ function findBlocks(S::SparseArray3D, i::Integer,j::Integer,k::Integer)
 	bj  = Tn2(j)
 	bk  = Tn2(k)
 
-	sz = (S.sz[1], S.sz[2], S.sz[3])
 	block = one(Tn2)
 
 	while true
 
-		bsz = S.SV[sub2ind(sz, bi,bj,bk)]
+		bsz = S.SV[sub2ind(S.sz, bi,bj,bk)]
 		if bsz != 0
 			break
 		end

@@ -14,9 +14,9 @@ function getEdgeToCellCenteredMatrix(S::SparseArray3D)
 #
 
 n   = S.sz;
-nex = n + [0, 1, 1]
-ney = n + [1, 0, 1]
-nez = n + [1, 1, 0]
+nex = (n[1],n[2]+1,n[3]+1)
+ney = (n[1]+1,n[2],n[3]+1)
+nez = (n[1]+1,n[2]+1,n[3])
 
 i,j,k,bsz = find3(S)
 ex,ey,ez = getEdgeNumbering(S)
