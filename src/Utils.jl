@@ -123,7 +123,13 @@ end
 
 # Internal utilities
 
-function getNodesFromIndices(sv,mm,i0::Vector,j0::Vector,k0::Vector)
+function getNodesFromIndices(sv,mm::Tuple,i0::Vector,j0::Vector,k0::Vector)
+    Ti = promote_type(eltype(mm),promote_type(eltype(i0),
+                      promote_type(eltype(j0),eltype(k0))))
+    mm = (Ti(mm[1]),Ti(mm[2]),Ti(mm[3]))
+    i0 = convert(Vector{Ti},i0)
+    j0 = convert(Vector{Ti},j0)
+    k0 = convert(Vector{Ti},k0)
 	jj = sub2ind(mm,i0,j0,k0)
     v  = Array{eltype(sv)}(length(jj))
     for i = 1:length(jj)

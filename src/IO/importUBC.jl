@@ -83,7 +83,7 @@ function importUBCOcTreeMesh(meshfile::AbstractString;Tn::Type{N}=Int64,Tn2::Typ
     bsz = bsz[p] #S[:,4]
 
     # create mesh object
-    S = sparse3(i1,i2,i3,bsz,[m1,m2,m3])
+    S = sparse3(i1,i2,i3,bsz,(m1,m2,m3))
     mesh = getOcTreeMeshFV(S,[h1,h2,h3];x0=[x1,x2,x3])
     return mesh
 end

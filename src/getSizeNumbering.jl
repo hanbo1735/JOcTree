@@ -76,7 +76,7 @@ function getEdgeSizeNumbering(S::SparseArray3D{Tn,Tn2}) where Tn <: Integer wher
  kk[3:4:ns4] = k + bsz
  kk[4:4:ns4] = k + bsz
 
- EX  = sparse3(ii,jj,kk, vv, collect(sizeEX))
+ EX  = sparse3(ii,jj,kk, vv, sizeEX)
  EXN = deepcopy(EX)
  copy!(EXN.SV.nzval, 1:nnz(EX) )
 
@@ -98,7 +98,7 @@ function getEdgeSizeNumbering(S::SparseArray3D{Tn,Tn2}) where Tn <: Integer wher
  kk[3:4:ns4] = k + bsz
  kk[4:4:ns4] = k + bsz
 
- EY  = sparse3(ii,jj,kk, vv, collect(sizeEY))
+ EY  = sparse3(ii,jj,kk, vv, sizeEY)
  EYN = deepcopy(EY)
  copy!(EYN.SV.nzval, 1:nnz(EY) )
 
@@ -120,7 +120,7 @@ function getEdgeSizeNumbering(S::SparseArray3D{Tn,Tn2}) where Tn <: Integer wher
  kk[3:4:ns4] = k
  kk[4:4:ns4] = k
 
- EZ  = sparse3(ii,jj,kk, vv, collect(sizeEZ))
+ EZ  = sparse3(ii,jj,kk, vv, sizeEZ)
  EZN = deepcopy(EZ)
  copy!(EZN.SV.nzval, 1:nnz(EZ) )
 
@@ -211,7 +211,7 @@ function getFaceSizeNumbering(S::SparseArray3D{Tn,Tn2}) where Tn <: Integer wher
  kk[1:2:ns2] = k
  kk[2:2:ns2] = k
 
- FX  = sparse3(ii,jj,kk, vv, collect(sizeFX))
+ FX  = sparse3(ii,jj,kk, vv, sizeFX)
  FXN = deepcopy(FX)
  copy!(FXN.SV.nzval, 1:nnz(FX) )
 
@@ -226,7 +226,7 @@ function getFaceSizeNumbering(S::SparseArray3D{Tn,Tn2}) where Tn <: Integer wher
  kk[1:2:ns2] = k
  kk[2:2:ns2] = k
 
- FY  = sparse3(ii,jj,kk, vv, collect(sizeFY))
+ FY  = sparse3(ii,jj,kk, vv, sizeFY)
  FYN = deepcopy(FY)
  copy!(FYN.SV.nzval, 1:nnz(FY) )
 
@@ -240,7 +240,7 @@ function getFaceSizeNumbering(S::SparseArray3D{Tn,Tn2}) where Tn <: Integer wher
  kk[1:2:ns2] = k
  kk[2:2:ns2] = k + bsz
 
- FZ  = sparse3(ii,jj,kk, vv, collect(sizeFZ))
+ FZ  = sparse3(ii,jj,kk, vv, sizeFZ)
  FZN = deepcopy(FZ)
  copy!(FZN.SV.nzval, 1:nnz(FZ) )
 
@@ -297,7 +297,7 @@ function getNodalNumbering(S::SparseArray3D{Tn,Tn2}) where Tn <: Integer where T
     kk[7:8:ns8] = k + bsz
     kk[8:8:ns8] = k + bsz
 
-    N = sparse3(ii,jj,kk, convert(Vector{Tn},kk), [m1+1,m2+1,m3+1])
+    N = sparse3(ii,jj,kk, convert(Vector{Tn},kk), (m1+1,m2+1,m3+1))
     copy!(N.SV.nzval, one(Tn):Tn(nnz(N)) )
 
     return N

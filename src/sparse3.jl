@@ -6,16 +6,31 @@ import Base.nnz
 import Base.getindex
 import Base.setindex!
 import Base.ndims
+import Base.convert
 
 struct SparseArray3D{N<:Integer,N2<:Integer}
         SV::SparseVector{N,N2}
-        sz::Vector{N2}    # size of fine mesh
+        sz::Tuple{N2,N2,N2}    # size of fine mesh
 end
 
-Base.size(S::SparseArray3D) = (S.sz[1], S.sz[2], S.sz[3])
+function SparseArray3D{N<:Integer,N2<:Integer}(SV::SparseVector{N,N2},sz::Tuple)
+    sz = (convert(N2,sz[1]), convert(N2,sz[2]), convert(N2,sz[3]))
+    SparseArray3D(SV,sz)
+end
+
+Base.size(S::SparseArray3D) = S.sz
 Base.size(S::SparseArray3D,dim::Integer) = S.sz[dim]
 Base.find(S::SparseArray3D) = find(S.SV)
 Base.ndims(S::SparseArray3D) = 3
+
+function convert(::Type{N}, ::Type{N2}, S::SparseArray3D) where {N <: Integer, N2 <: Integer}
+    sz = (N2(S.sz[1]),N2(S.sz[2]),N2(S.sz[3]))
+    return SparseArray3D(convert(SparseVector{N,N2}, S.SV), sz)
+end
+
+function convert(::Type{N}, S::SparseArray3D) where N <: Integer
+    return convert(N, eltype(S.SV.nzind), S)
+end
 
 function sparse3(sz::Vector)
         S = spzeros(eltype(sz),eltype(sz),prod(sz))
@@ -25,14 +40,14 @@ end
 import Base.isempty
 isempty(S::SparseArray3D) = (nnz(S.SV)==0)
 
-function sparse3(i::Vector,j::Vector,k::Vector,v::Range,sz::Vector)
+function sparse3(i::Vector,j::Vector,k::Vector,v::Range,sz::Tuple)
         return sparse3(i,j,k,[v;],sz)
 end
-function sparse3(i::Vector,j::Vector,k::Vector,v::Range,sz::Vector,combine::Function)
+function sparse3(i::Vector,j::Vector,k::Vector,v::Range,sz::Tuple,combine::Function)
         return sparse3(i,j,k,[v;],sz,combine)
 end
 
-function sparse3(i::Vector,j::Vector,k::Vector,v::Vector,sz::Vector)
+function sparse3(i::Vector,j::Vector,k::Vector,v::Vector,sz::Tuple)
 	IND = sub2ind(sz,i,j,k)
 
   # Note that the following line would sort IND, and v would be permuted.  For
@@ -44,7 +59,7 @@ function sparse3(i::Vector,j::Vector,k::Vector,v::Vector,sz::Vector)
 end
 
 
-function sparse3(i::Vector,j::Vector,k::Vector,v::Vector,sz::Vector,combine::Function)
+function sparse3(i::Vector,j::Vector,k::Vector,v::Vector,sz::Tuple,combine::Function)
 
         IND = sub2ind(sz,i,j,k)
      	  S = sparsevec(IND,v, prod(sz), combine)
@@ -53,7 +68,7 @@ end
 
 function find3(S::SparseArray3D)
         IND = find(S.SV)
-        i,j,k = ind2sub((S.sz[1],S.sz[2],S.sz[3]),IND)
+        i,j,k = ind2sub(S.sz,IND)
         # Tn = eltype(S.SV.nzval)
         # i = convert(Vector{Tn},i)
         # j = convert(Vector{Tn},j)
@@ -103,6 +118,6 @@ import Base.clear!
 function clear!(S::SparseArray3D)
     N  = eltype(S.SV.nzval)
     N2 = eltype(S.SV.nzind)
-    sz = [size(S,1),size(S,2),size(S,3)]
+    sz = (size(S,1),size(S,2),size(S,3))
     return SparseArray3D(spzeros(N,N2,prod(sz)),sz)
 end

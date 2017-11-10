@@ -14,8 +14,9 @@ function getCurlMatrixRec(M)
 # [CURL,T,ESZ,FSZ] = getCurlMatrix(S)
 
 S = M.S; h = M.h
-Tn = eltype(S.SV.nzval)
-Tf = eltype(h)
+Tn  = eltype(S.SV.nzval)
+Tn2 = eltype(S.SV.nzind)
+Tf  = eltype(h)
 m1,m2,m3    = S.sz
 FX,FY,FZ, NFX,NFY,NFZ = getFaceSizeNumbering(M)
 EX,EY,EZ, NEX,NEY,NEZ = getEdgeSizeNumbering(M)
@@ -30,6 +31,7 @@ EX,EY,EZ, NEX,NEY,NEZ = getEdgeSizeNumbering(M)
 ######################################################################
 # look for y edges next to x faces
 i,j,k,fsz = find3(FX)
+fsz = convert(Vector{Tn2},fsz)
 fn        = nonzeros(NFX)
 
 ##
@@ -45,8 +47,8 @@ backmid  = zeros(Tn, length(back))
 
 I =  (j+div.(fsz,2) .<= m2) .& (fsz .>= 2)
 if any(I)
-  frontmid[I] = NEY.SV[sub2ind(NEY.sz, i[I] , j[I]+div.(fsz[I],2) , k[I]  )]
-  backmid[I]  = NEY.SV[sub2ind(NEY.sz, i[I] , j[I]+div.(fsz[I],2) , k[I]+fsz[I] )]
+  frontmid[I] = NEY.SV[sub2ind(NEY.sz, i[I] , j[I]+div.(fsz[I],Tn2(2)) , k[I]  )]
+  backmid[I]  = NEY.SV[sub2ind(NEY.sz, i[I] , j[I]+div.(fsz[I],Tn2(2)) , k[I]+fsz[I] )]
 end
 # front y
 
@@ -76,8 +78,8 @@ rightmid = zeros(Tn, length(right))
 
 I = (j+div.(fsz,2) .<= m2) .& (fsz .>= 2)
 if any(I)
-    leftmid[I]  = NEZ.SV[sub2ind(NEZ.sz, i[I], j[I],        k[I]+div.(fsz[I],2) )]
-    rightmid[I] = NEZ.SV[sub2ind(NEZ.sz, i[I], j[I]+fsz[I], k[I]+div.(fsz[I],2) )]
+    leftmid[I]  = NEZ.SV[sub2ind(NEZ.sz, i[I], j[I],        k[I]+div.(fsz[I],Tn2(2)) )]
+    rightmid[I] = NEZ.SV[sub2ind(NEZ.sz, i[I], j[I]+fsz[I], k[I]+div.(fsz[I],Tn2(2)) )]
 end
 Il1 = (leftmid .== 0)  # SINGLE LEFT EDGE PER FACE
 Il2 = (leftmid .>  0)  # 2 LEFT EDGES PER FACE
@@ -101,6 +103,7 @@ DZY = sparse(ii, jj, vv,nnz(NFX),nnz(NEZ))
 ######################################################################
 # look for y edges next to x faces
 i,j,k,fsz = find3(FY)
+fsz = convert(Vector{Tn2},fsz)
 fn        = nonzeros(NFY)
 
 
@@ -119,8 +122,8 @@ backmid  = zeros(Tn, length(back))
 
 I = (i+div.(fsz,2) .<= m1) .& (fsz .>= 2)
 if any(I)
-    frontmid[I] = NEX.SV[sub2ind(NEX.sz, i[I]+div.(fsz[I],2) , j[I] , k[I])]
-    backmid[I]  = NEX.SV[sub2ind(NEX.sz, i[I]+div.(fsz[I],2) , j[I] , k[I]+fsz[I])]
+    frontmid[I] = NEX.SV[sub2ind(NEX.sz, i[I]+div.(fsz[I],Tn2(2)) , j[I] , k[I])]
+    backmid[I]  = NEX.SV[sub2ind(NEX.sz, i[I]+div.(fsz[I],Tn2(2)) , j[I] , k[I]+fsz[I])]
 end
 
 If1 = (frontmid .== 0)  # SINGLE FRONT EDGE PER FACE
@@ -149,8 +152,8 @@ lowermid = zeros(Tn, length(lower))
 
 I = (i+div.(fsz,2) .<= m1) .& (fsz .>= 2)
 if any(I)
-    uppermid[I] = NEZ.SV[sub2ind(NEZ.sz, i[I], j[I], k[I]+div.(fsz[I],2) )]
-    lowermid[I] = NEZ.SV[sub2ind(NEZ.sz, i[I]+fsz[I] , j[I] , k[I]+div.(fsz[I],2) )]
+    uppermid[I] = NEZ.SV[sub2ind(NEZ.sz, i[I], j[I], k[I]+div.(fsz[I],Tn2(2)) )]
+    lowermid[I] = NEZ.SV[sub2ind(NEZ.sz, i[I]+fsz[I] , j[I] , k[I]+div.(fsz[I],Tn2(2)) )]
 end
 Iu1 = (uppermid .== 0)  # SINGLE UPPER EDGE PER FACE
 Iu2 = (uppermid .>  0)  # 2 UPPER EDGES PER FACE
@@ -172,6 +175,7 @@ DZX = sparse(ii, jj, vv,nnz(NFY),nnz(NEZ))
 ######################################################################
 # look for y edges next to x faces
 i,j,k,fsz = find3(FZ)
+fsz = convert(Vector{Tn2},fsz)
 fn        = nonzeros(NFZ)
 
 
@@ -190,8 +194,8 @@ rightmid = zeros(Tn, length(right))
 I = (i+div.(fsz,2) .<= m1) .& (fsz .>= 2)
 
 if any(I)
-    leftmid[I]  = NEX.SV[sub2ind(NEX.sz, i[I]+div.(fsz[I],2), j[I]        , k[I] )]
-    rightmid[I] = NEX.SV[sub2ind(NEX.sz, i[I]+div.(fsz[I],2), j[I]+fsz[I] , k[I] )]
+    leftmid[I]  = NEX.SV[sub2ind(NEX.sz, i[I]+div.(fsz[I],Tn2(2)), j[I]        , k[I] )]
+    rightmid[I] = NEX.SV[sub2ind(NEX.sz, i[I]+div.(fsz[I],Tn2(2)), j[I]+fsz[I] , k[I] )]
 end
 Il1 = (leftmid .== 0)  # SINGLE LEFT EDGE PER FACE
 Il2 = (leftmid .>  0)  # 2 LEFT EDGES PER FACE
@@ -218,8 +222,8 @@ lowermid = zeros(Tn, length(lower))
 
 I = (j+div.(fsz,2) .<= m2) .& (fsz .>= 2)
 if any(I)
-    uppermid[I] = NEY.SV[sub2ind(NEY.sz, i[I]        , j[I]+div.(fsz[I],2) , k[I] )]
-    lowermid[I] = NEY.SV[sub2ind(NEY.sz, i[I]+fsz[I] , j[I]+div.(fsz[I],2) , k[I] )]
+    uppermid[I] = NEY.SV[sub2ind(NEY.sz, i[I]        , j[I]+div.(fsz[I],Tn2(2)) , k[I] )]
+    lowermid[I] = NEY.SV[sub2ind(NEY.sz, i[I]+fsz[I] , j[I]+div.(fsz[I],Tn2(2)) , k[I] )]
 end
 Iu1 = (uppermid .== 0)  # SINGLE UPPER EDGE PER FACE
 Iu2 = (uppermid .>  0)  # 2 UPPER EDGES PER FACE

@@ -13,9 +13,9 @@ function getFaceToCellCenteredMatrixAnisotropic(S::SparseArray3D)
 #
 
 n = S.sz;
-nex = n + [1, 0, 0]
-ney = n + [0, 1, 0]
-nez = n + [0, 0, 1]
+nex = (n[1]+1,n[2],n[3])
+ney = (n[1],n[2]+1,n[3])
+nez = (n[1],n[2],n[3]+1)
 
 i,j,k,bsz = find3(S)
 ex,ey,ez = getFaceNumbering(S)

@@ -14,7 +14,7 @@ end  # function splitCells
 
 #-----------------------------
 
-function splitCells( i,j,k,bsz, n, idx::Vector)
+function splitCells( i,j,k,bsz, n::Tuple, idx::Vector)
 # Split cells idx into 2*2*2=8 smaller cells.
 
 old_mesh_size = length(i)
@@ -61,7 +61,7 @@ for icel = 1:nidx
 
 end # icel
 
-S = sparse3(ii,jj,kk,vv,[n[1],n[2],n[3]])
+S = sparse3(ii,jj,kk,vv,n)
 
 return S
 end  # function splitCells

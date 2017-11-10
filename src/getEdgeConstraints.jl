@@ -30,12 +30,14 @@ function getEdgeConstraints(::Type{Tf},S::SparseArray3D) where Tf
 #
 
 i0,j0,k0,bsz = find3(S)
+Tn2 = eltype(i0)
+bsz = convert(Vector{Tn2},bsz)
 
-i1 = i0 + div.(bsz, 2)
+i1 = i0 + div.(bsz, Tn2(2))
 i2 = i0 + bsz
-j1 = j0 + div.(bsz, 2)
+j1 = j0 + div.(bsz, Tn2(2))
 j2 = j0 + bsz
-k1 = k0 + div.(bsz, 2)
+k1 = k0 + div.(bsz, Tn2(2))
 k2 = k0 + bsz
 
 upper,lower,left,right,front,back = getNumberOfNeighbors(S)
