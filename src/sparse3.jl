@@ -32,9 +32,14 @@ function convert(::Type{N}, S::SparseArray3D) where N <: Integer
     return convert(N, eltype(S.SV.nzind), S)
 end
 
-function sparse3(sz::Vector)
-        S = spzeros(eltype(sz),eltype(sz),prod(sz))
-        return SparseArray3D(S,sz)
+function sparse3(::Type{N}, sz::Tuple{N2,N2,N2}) where {N <: Integer, N2 <: Integer}
+    S = spzeros(N,N2,prod(sz))
+    return SparseArray3D(S,sz)
+end
+
+function sparse3(sz::Tuple{N2,N2,N2}) where N2 <: Integer
+  S = spzeros(N2,N2,prod(sz))
+  return SparseArray3D(S,sz)
 end
 
 import Base.isempty
