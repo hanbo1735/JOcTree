@@ -2,7 +2,7 @@
 export getEdgeSizeNumbering, getEdgeSize, getEdgeNumbering,
        getFaceSizeNumbering, getFaceSize, getFaceNumbering,
        getNodalNumbering, getCellNumbering, getVolume, getLength,
-       getVolumeVector
+       getVolumeVector, getLengthVector
 
 
 
@@ -141,6 +141,11 @@ function getLength(Mesh::OcTreeMesh)
         Mesh.L = spdiagm([l1;l2;l3])
     end
     return Mesh.L
+end
+
+function getLengthVector(Mesh::OcTreeMesh)
+    L = getLength(Mesh)
+    return L.nzval
 end
 
 #-------------------------------------------------------------------------
